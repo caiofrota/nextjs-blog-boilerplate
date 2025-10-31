@@ -1,0 +1,66 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../.prisma"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement()) @map("id")
+  email     String   @unique @map("email")
+  username  String   @unique @map("username")
+  firstName String   @map("first_name")
+  lastName  String   @map("last_name")
+  password  String   @map("password")
+  role      RoleEnum @default(GUEST) @map("role")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  posts     Post[]
+
+  @@index([email], name: "user_email_idx")
+  @@map("user")
+}
+
+model Post {
+  id         Int      @id @default(autoincrement()) @map("id")
+  title      String   @map("title")
+  slug       String   @unique @map("slug")
+  content    String   @map("content")
+  categoryId Int      @map("category_id")
+  published  Boolean  @default(false) @map("published")
+  authorId   Int      @map("author_id")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+  author     User     @relation(fields: [authorId], references: [id])
+  category   Category @relation(fields: [categoryId], references: [id])
+
+  @@index([slug], name: "post_slug_idx")
+  @@index([categoryId], name: "post_category_idx")
+  @@index([authorId], name: "post_author_idx")
+  @@map("post")
+}
+
+model Category {
+  id        Int      @id @default(autoincrement()) @map("id")
+  name      String   @unique @map("name")
+  slug      String   @unique @map("slug")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  posts     Post[]
+
+  @@map("category")
+}
+
+enum RoleEnum {
+  ADMIN
+  GUEST
+}
