@@ -1,0 +1,30 @@
+import { NextRequest, NextResponse } from "next/server";
+import { authenticateWithRefreshToken } from "../authentication";
+import { UnauthorizedError } from "errors";
+import { withErrorHandling } from "errors/handler";
+
+async function handlePost(req: NextRequest) {
+  const refreshToken = req.cookies.get(process.env.REFRESH_TOKEN_NAME ?? "refresh_token")?.value;
+  if (!refreshToken) {
+    throw new UnauthorizedError({
+      message: "No refresh token.",
+      action: "Please provide a valid refresh token.",
+    });
+  }
+
+  const tokens = await authenticateWithRefreshToken(refreshToken);
+  const res = NextResponse.json({ status: "ok" }, { status: 200 });
+
+  res.cookies.set(process.env.ACCESS_TOKEN_NAME ?? "access_token", tokens.accessToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+  });
+  res.cookies.set(process.env.REFRESH_TOKEN_NAME ?? "refresh_token", tokens.refreshToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+  });
+
+  return res;
+}
+
+export const POST = await withErrorHandling(handlePost);
