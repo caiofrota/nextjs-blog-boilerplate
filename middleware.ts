@@ -5,6 +5,7 @@ const ADMIN_PATH = "/admin";
 const LOGIN_PATH = "/login";
 
 export async function middleware(request: NextRequest): Promise<NextResponse> {
+  console.log("Middleware triggered for:", request.url);
   const { pathname } = request.nextUrl;
   const token = request.cookies.get(process.env.ACCESS_TOKEN_NAME ?? "token")?.value;
 
@@ -64,5 +65,5 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
 }
 
 export const config = {
-  matcher: ["/admin/:path", "/login"],
+  matcher: ["/admin", "/admin/:path*", "/login"],
 };
