@@ -20,11 +20,11 @@ async function handlePost(req: NextRequest) {
 
     const res = NextResponse.json({ status: "ok" }, { status: 200 });
 
-    res.cookies.set(process.env.ACCESS_TOKEN_NAME ?? "access_token", tokens.accessToken, {
+    res.cookies.set("access_token", tokens.accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
     });
-    res.cookies.set(process.env.REFRESH_TOKEN_NAME ?? "refresh_token", tokens.refreshToken, {
+    res.cookies.set("refresh_token", tokens.refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
     });

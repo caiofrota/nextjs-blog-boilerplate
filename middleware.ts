@@ -5,9 +5,8 @@ const ADMIN_PATH = "/admin";
 const LOGIN_PATH = "/login";
 
 export async function middleware(request: NextRequest): Promise<NextResponse> {
-  console.log("Middleware triggered for:", request.url);
   const { pathname } = request.nextUrl;
-  const token = request.cookies.get(process.env.ACCESS_TOKEN_NAME ?? "token")?.value;
+  const token = request.cookies.get("access_token")?.value;
 
   try {
     const protectedRoutes = [ADMIN_PATH];
@@ -29,12 +28,12 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
     return NextResponse.next();
   } catch (error) {
     try {
-      const refreshToken = request.cookies.get(process.env.REFRESH_TOKEN_NAME ?? "refresh_token")?.value;
+      const refreshToken = request.cookies.get("refresh_token")?.value;
       if (refreshToken && (await verify(refreshToken))) {
         const refreshTokenResponse = await fetch("http://localhost:3000/api/v1/session/refresh", {
           method: "POST",
           headers: {
-            Cookie: `${process.env.REFRESH_TOKEN_NAME ?? "refresh_token"}=${refreshToken}`,
+            Cookie: `refresh_token=${refreshToken}`,
           },
         });
         if (!refreshTokenResponse.ok) throw new Error("Invalid refresh token");
@@ -46,8 +45,8 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
           await verify(
             cookies
               .split(";")
-              .find((c) => c.trim().startsWith(`${process.env.ACCESS_TOKEN_NAME ?? "access_token"}=`))!
-              .split("=")[1],
+              .find((c) => c.trim().startsWith("access_token="))
+              ?.split("=")[1] || "",
           );
           return response;
         }
@@ -57,8 +56,8 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
       console.error(error);
       const url = new URL(LOGIN_PATH, request.url);
       const response = NextResponse.redirect(url);
-      response.cookies.delete(process.env.ACCESS_TOKEN_NAME ?? "access_token");
-      response.cookies.delete(process.env.REFRESH_TOKEN_NAME ?? "refresh_token");
+      response.cookies.delete("access_token");
+      response.cookies.delete("refresh_token");
       return response;
     }
   }

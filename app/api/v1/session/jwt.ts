@@ -1,4 +1,3 @@
-//import jwt from "jsonwebtoken";
 import { JWTPayload, jwtVerify, SignJWT } from "jose";
 
 type SessionPayload = {

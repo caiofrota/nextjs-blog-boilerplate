@@ -45,7 +45,7 @@ describe("Middleware", async () => {
       method: "POST",
       body: JSON.stringify({ username: "admin", password: "password" }),
       headers: {
-        Cookie: `token=mocked_access_token`,
+        Cookie: "access_token=mocked_access_token",
       },
     });
 
@@ -69,7 +69,7 @@ describe("Middleware", async () => {
       method: "POST",
       body: JSON.stringify({ username: "admin", password: "password" }),
       headers: {
-        Cookie: `token=mocked_access_token`,
+        Cookie: "access_token=mocked_access_token",
       },
     });
 
@@ -83,7 +83,7 @@ describe("Middleware", async () => {
       method: "POST",
       body: JSON.stringify({ username: "admin", password: "password" }),
       headers: {
-        Cookie: `token=mocked_access_token;refresh_token=mocked_refresh_token`,
+        Cookie: "access_token=mocked_access_token;refresh_token=mocked_refresh_token",
       },
     });
 
@@ -118,7 +118,7 @@ describe("Middleware", async () => {
       method: "POST",
       body: JSON.stringify({ username: "admin", password: "password" }),
       headers: {
-        Cookie: `token=mocked_access_token;refresh_token=mocked_refresh_token`,
+        Cookie: "access_token=mocked_access_token;refresh_token=mocked_refresh_token",
       },
     });
 
@@ -128,7 +128,7 @@ describe("Middleware", async () => {
     expect(global.fetch).toHaveBeenCalledWith("http://localhost:3000/api/v1/session/refresh", {
       method: "POST",
       headers: {
-        Cookie: `refresh_token=mocked_refresh_token`,
+        Cookie: "refresh_token=mocked_refresh_token",
       },
     });
   });
@@ -149,7 +149,7 @@ describe("Middleware", async () => {
       method: "POST",
       body: JSON.stringify({ username: "admin", password: "password" }),
       headers: {
-        Cookie: `token=mocked_access_token;refresh_token=mocked_refresh_token`,
+        Cookie: "access_token=mocked_access_token;refresh_token=mocked_refresh_token",
       },
     });
 
@@ -170,7 +170,7 @@ describe("Middleware", async () => {
       method: "POST",
       body: JSON.stringify({ username: "admin", password: "password" }),
       headers: {
-        Cookie: `token=mocked_access_token;refresh_token=mocked_refresh_token`,
+        Cookie: "access_token=mocked_access_token;refresh_token=mocked_refresh_token",
       },
     });
 
@@ -187,7 +187,7 @@ describe("Middleware", async () => {
       method: "POST",
       body: JSON.stringify({ username: "admin", password: "password" }),
       headers: {
-        Cookie: "token=mocked_access_token",
+        Cookie: "access_token=mocked_access_token",
       },
     });
 
@@ -204,7 +204,7 @@ describe("Middleware", async () => {
       method: "POST",
       body: JSON.stringify({ username: "admin", password: "password" }),
       headers: {
-        Cookie: "token=mocked_access_token;refresh_token=invalid_refresh_token",
+        Cookie: "access_token=mocked_access_token;refresh_token=invalid_refresh_token",
       },
     });
 
@@ -223,7 +223,7 @@ describe("Middleware", async () => {
       method: "POST",
       body: JSON.stringify({ username: "admin", password: "password" }),
       headers: {
-        Cookie: "token=mocked_access_token;refresh_token=invalid_refresh_token",
+        Cookie: "access_token=mocked_access_token;refresh_token=invalid_refresh_token",
       },
     });
 
